@@ -1,59 +1,34 @@
-class Estatisticas {
-    int posseBola;
-    int chutes;
-    int faltas;
-    int cartoesAmarelos;
-    int cartoesVermelhos;
+public class Pedido {
+    private double valorTotal;
+    private String tipoCliente;
 
-    public Estatisticas(int posseBola, int chutes, int faltas, int cartoesAmarelos, int cartoesVermelhos) {
-        this.posseBola = posseBola;
-        this.chutes = chutes;
-        this.faltas = faltas;
-        this.cartoesAmarelos = cartoesAmarelos;
-        this.cartoesVermelhos = cartoesVermelhos;
-    }
-}
-
-class TimePartida {
-    String nome;
-    int gols;
-    Estatisticas estatisticas;
-
-    public TimePartida(String nome, int gols, Estatisticas estatisticas) {
-        this.nome = nome;
-        this.gols = gols;
-        this.estatisticas = estatisticas;
-    }
-}
-
-public class GerenciadorPartida {
-
-    public void registrarPartida(TimePartida casa, TimePartida visitante) {
-        System.out.println("Partida Registrada:");
-        System.out.println(casa.nome + " " + casa.gols + " x " + visitante.gols + " " + visitante.nome);
-        System.out.println("Posse de Bola: " + casa.estatisticas.posseBola + "% - " + visitante.estatisticas.posseBola + "%");
-        System.out.println("Chutes: " + casa.estatisticas.chutes + " - " + visitante.estatisticas.chutes);
+    public Pedido(double valorTotal, String tipoCliente) {
+        this.valorTotal = valorTotal;
+        this.tipoCliente = tipoCliente;
     }
 
-    public void gerarRelatorio(TimePartida casa, TimePartida visitante) {
-        String vencedor = casa.gols > visitante.gols ? casa.nome :
-                         (casa.gols < visitante.gols ? visitante.nome : "Empate");
+    public double calcularDesconto() {
+        double desconto = 0.0;
 
-        System.out.println("=== Relatório da Partida ===");
-        System.out.println("Vencedor: " + vencedor);
-        System.out.println("Total de Chutes: " + (casa.estatisticas.chutes + visitante.estatisticas.chutes));
-        System.out.println("Total de Faltas: " + (casa.estatisticas.faltas + visitante.estatisticas.faltas));
+        if ("COMUM".equals(tipoCliente)) {
+            desconto = 0.05; // 5% de desconto
+        } else if ("VIP".equals(tipoCliente)) {
+            desconto = 0.10; // 10% de desconto
+        } else if ("FUNCIONARIO".equals(tipoCliente)) {
+            desconto = 0.20; // 20% de desconto
+        }
+
+        return valorTotal * (1 - desconto);
+    }
+
+    public void exibirResumo() {
+        System.out.println("Tipo de Cliente: " + tipoCliente);
+        System.out.println("Valor Original: R$" + valorTotal);
+        System.out.println("Valor com Desconto: R$" + calcularDesconto());
     }
 
     public static void main(String[] args) {
-        Estatisticas estatCasa = new Estatisticas(55, 10, 15, 3, 1);
-        Estatisticas estatVisit = new Estatisticas(45, 8, 12, 2, 0);
-
-        TimePartida casa = new TimePartida("Time A", 2, estatCasa);
-        TimePartida visitante = new TimePartida("Time B", 1, estatVisit);
-
-        GerenciadorPartida gerenciador = new GerenciadorPartida();
-        gerenciador.registrarPartida(casa, visitante);
-        gerenciador.gerarRelatorio(casa, visitante);
+        Pedido pedido1 = new Pedido(100.0, "VIP");
+        pedido1.exibirResumo();
     }
 }
